@@ -1,4 +1,4 @@
-##把数据传入模型中进行训练
+
 import torch
 from PIL import Image
 
@@ -8,11 +8,11 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 from torch.utils.data import Dataset
 
-# 数据归一化与标准化
 
-# 图片标准化
+
+
 transform_BZ= transforms.Normalize(
-    mean=[0.5, 0.5, 0.5],# 取决于数据集
+    mean=[0.5, 0.5, 0.5],
     std=[0.5, 0.5, 0.5]
 )
 
@@ -23,25 +23,25 @@ class LoadData(Dataset):
         self.train_flag = train_flag
 
         self.train_tf = transforms.Compose([
-                transforms.Resize(224),#将图片压缩成224*224的大小
-                transforms.RandomHorizontalFlip(),#对图片进行随机的水平翻转
-                transforms.RandomVerticalFlip(),#随机的垂直翻转
-                transforms.ToTensor(),#把图片改为Tensor格式
-                transform_BZ#图片标准化的步骤
+                transforms.Resize(224),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+                transforms.ToTensor(),
+                transform_BZ
             ])
-        self.val_tf = transforms.Compose([##简单把图片压缩了变成Tensor模式
+        self.val_tf = transforms.Compose([
                 transforms.Resize(224),
                 transforms.ToTensor(),
-                transform_BZ#标准化操作
+                transform_BZ
             ])
 
     def get_images(self, txt_path):
         with open(txt_path, 'r', encoding='utf-8') as f:
             imgs_info = f.readlines()
             imgs_info = list(map(lambda x:x.strip().split('\t'), imgs_info))
-        return imgs_info#返回图片信息
+        return imgs_info
 
-    def padding_black(self, img):#如果尺寸太小可以扩充
+    def padding_black(self, img):
         w, h  = img.size
         scale = 224. / max(w, h)
         img_fg = img.resize([int(x) for x in [w * scale, h * scale]])
@@ -53,10 +53,10 @@ class LoadData(Dataset):
         img = img_bg
         return img
 
-    def __getitem__(self, index):#返回真正想返回的东西
+    def __getitem__(self, index):
         img_path, label = self.imgs_info[index]
-        img = Image.open(img_path)#打开图片
-        img = img.convert('RGB')#转换为RGB 格式
+        img = Image.open(img_path)
+        img = img.convert('RGB')
         img = self.padding_black(img)
         if self.train_flag:
             img = self.train_tf(img)
@@ -72,7 +72,7 @@ class LoadData(Dataset):
 
 if __name__ == "__main__":
     train_dataset = LoadData("train.txt", True)
-    print("数据个数：", len(train_dataset))
+    print("number：", len(train_dataset))
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                                batch_size=10,
                                                shuffle=True)
