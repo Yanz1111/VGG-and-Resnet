@@ -1,22 +1,19 @@
-'''
-生成训练集和测试集，保存在txt文件中
-'''
-##相当于模型的输入。后面做数据加载器dataload的时候从里面读他的数据
+
 import os
 import random#打乱数据用的
 
-# 百分之60用来当训练集
+
 train_ratio = 0.6
 
-# 用来当测试集
+
 test_ratio = 1-train_ratio
 
-rootdata = 'C:/Users/Administrator/Desktop/data2'  #数据的根目录
+rootdata = 'C:/Users/Administrator/Desktop/data2'  
 
-train_list, test_list = [],[]#读取里面每一类的类别
+train_list, test_list = [],[]
 data_list = []
 
-#生产train.txt和test.txt
+
 class_flag = -1
 for a,b,c in os.walk(rootdata):
     print(a)
@@ -34,7 +31,7 @@ for a,b,c in os.walk(rootdata):
     class_flag += 1
 
 print(train_list)
-random.shuffle(train_list)#打乱次序
+random.shuffle(train_list)
 random.shuffle(test_list)
 
 with open('train.txt','w',encoding='UTF-8') as f:
